@@ -1,0 +1,22 @@
+{
+  "name": "timeline_poc",
+  "version": "1.0.0",
+  "description": "NodeJS",
+  "main": "modelo_novo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PMoneda/timeline_poc.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PMoneda/timeline_poc/issues"
+  },
+  "homepage": "https://github.com/PMoneda/timeline_poc#readme",
+  "dependencies": {
+    "sha1": "^1.1.1"
+  }
+}
