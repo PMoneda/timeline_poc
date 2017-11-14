@@ -3,6 +3,14 @@
         <script src="timeline.js"></script>
         <script src="database.js"></script>        
         <script src="modelo_novo.js"></script>
-        <p>Database</p>
+        <script src="context.js"></script>
+        <script src="bank_app.js"></script>
+        <script src="bank_service.js"></script>
+        <p>Welcome to Moneda Bank</p>
+        <form name="create_account">
+            <span>Owner:&nbsp;&nbsp;&nbsp;</span><input type="text" id="create_account:owner" /><br/><br/>
+            <span>Balance: </span><input type="number" id="create_account:balance"/> <br/><br/>
+            <input type="button" value="create account" onclick="_service.create_account()" />
+        </form>
     </body>
 </html>

@@ -9,43 +9,53 @@ function Database(name){
 }
 Database.prototype.save = function(entity, branch){
     var repo = null;
-    if (notExist(this.INDEX[entity._type])){
-        this.INDEX[entity._type] = {};
+    if (notExist(this.INDEX[entity._document._type])){
+        this.INDEX[entity._document._type] = {};
     }
-    if (notExist(this.INDEX[entity._type][entity.id])){
-        repo = new Repository(entity._type+"-"+entity.id)
-        this.INDEX[entity._type][entity.id] = repo;
+    if (notExist(this.INDEX[entity._document._type][entity._document.id])){
+        repo = new Repository(entity._document._type+"-"+entity._document.id)
+        this.INDEX[entity._document._type][entity._document.id] = repo;
     }else{
-        repo = this.INDEX[entity._type][entity.id];
+        repo = this.INDEX[entity._document._type][entity._document.id];
     }
     if (exist(branch)){
         repo.setMainBranch(branch);
-        entity._branch = branch;
-    }else if(notExist(entity._branch)){
-        entity._branch = repo.mainBranch();
-    }else if (exist(entity._branch)){
-        repo.setMainBranch(entity._branch);
+        entity._document._branch = branch;
+    }else if(notExist(entity._document._branch)){
+        entity._document._branch = repo.mainBranch();
+    }else if (exist(entity._document._branch)){
+        repo.setMainBranch(entity._document._branch);
     }
     var head = repo.head();
     if (notExist(head)){
-        entity._version = 1;
+        entity._document._version = 1;
     }else {
-        entity._version = head.data()._version + 1;
+        entity._document._version = head.data()._document._version + 1;
     }
-    var hash = repo.commit(entity,"save","database-service",entity._branch);
+    var hash = repo.commit(entity,"save","database-service",entity._document._branch);
     if(exist(entity._transaction)){
         if (notExist(this.SEARCH["transactions"][entity._transaction.id])){
             this.SEARCH["transactions"][entity._transaction.id] = [];
         }
         this.SEARCH["transactions"][entity._transaction.id].push({
-            type:entity._type,
-            branch:entity._branch,
+            type:entity._document._type,
+            branch:entity._document._branch,
             hash:hash
         });
     }
     this.sync();
 
     return entity;
+};
+
+Database.prototype.find_all = function(type){
+    var reg = this.INDEX[type];
+    var list = [];
+    for(var id in reg){
+        list.push(reg[id]);
+    }
+    return list;
+
 };
 
 Database.prototype.commitsByTransactionId = function(id){
