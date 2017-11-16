@@ -52,7 +52,7 @@ Database.prototype.find_all = function(type){
     var reg = this.INDEX[type];
     var list = [];
     for(var id in reg){
-        list.push(reg[id]);
+        list.push(reg[id].head().data()._document);
     }
     return list;
 

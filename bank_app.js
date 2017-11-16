@@ -10,7 +10,6 @@ function Account(balance, owner){
 function CreateAccountCommand(initialBalance, owner){
     this._version = 1;
     this._input = [initialBalance,owner];
-    var self = this;
     this.account = new Account(initialBalance,owner);
 }
 CreateAccountCommand.prototype.output = function(){
