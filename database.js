@@ -108,7 +108,7 @@ Database.prototype.sync = function(){
 
 Database.prototype.getById = function(type,id){
     if(exist(this.INDEX[type]) && exist(this.INDEX[type][id])){
-        return this.INDEX[type][id].head().data();
+        return this.INDEX[type][id].head().data()._document;
     }
 };
 

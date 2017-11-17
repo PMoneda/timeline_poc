@@ -13,7 +13,6 @@ Context.prototype.add = function(command){
 Context.prototype.execute = function(){
     var points = this._map_points();
     points.forEach((p)=>{
-        print(p);
         this._db.save(p,this._branch);
     });
 };

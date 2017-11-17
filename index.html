@@ -1,21 +1,102 @@
 <html>
-    <body>
-        <script src="https://unpkg.com/vue"></script>
-        <script src="timeline.js"></script>
-        <script src="database.js"></script>        
-        <script src="modelo_novo.js"></script>
-        <script src="context.js"></script>
-        <script src="bank_app.js"></script>
-        <script src="bank_service.js"></script>
-        <script src="bank_front.js"></script>
-        <div id="app">
-            <p>Welcome to Moneda Bank</p>
-            <form name="create_account">
-                <span>Owner:&nbsp;&nbsp;&nbsp;</span><input type="text" id="create_account:owner" /><br/><br/>
-                <span>Balance: </span><input type="number" id="create_account:balance"/> <br/><br/>
-                <input type="button" value="create account" onclick="_service.create_account()" />
-            </form>
-        </div>
-        
-    </body>
+
+<body>
+    
+    
+    <div id="app">
+        <p>Welcome to Moneda eBank</p>
+        <form name="create_account">
+            <table>
+                <tr>
+                    <td>Owner:</td>
+                    <td>
+                        <input type="text" id="create_account:owner" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Balance:</td>
+                    <td>
+                        <input type="number" id="create_account:balance" />
+                    </td>
+                </tr>
+            </table>
+            <input type="button" value="create account" onclick="_front.create_account()" />
+        </form>
+        Registros
+        <br/>
+        <textarea id="list" cols="50" rows="5"></textarea>
+        <br/>
+        <br/> Transfer
+        <br/>
+        <form name="transfer">
+            <table>
+                <tr>
+                    <td>From:</td>
+                    <td>
+                        <input type="text" id="transfer:from" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>To:</td>
+                    <td>
+                        <input type="text" id="transfer:to" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Value:</td>
+                    <td>
+                        <input type="number" id="transfer:value" />
+                    </td>
+                </tr>
+            </table>
+            <input type="button" value="transfer" onclick="_front.transfer()" />
+        </form>
+        <br/> Credit
+        <br/>
+        <form name="credit">
+            <table>
+                <tr>
+                    <td>To:</td>
+                    <td>
+                        <input type="text" id="credit:to" />
+                    </td>
+                </tr>                
+                <tr>
+                    <td>Value:</td>
+                    <td>
+                        <input type="number" id="credit:value" />
+                    </td>
+                </tr>
+            </table>
+            <input type="button" value="credit" onclick="_front.credit()" />
+        </form>
+        <br/> Debit
+        <br/>
+        <form name="debit">
+            <table>
+                <tr>
+                    <td>From:</td>
+                    <td>
+                        <input type="text" id="debit:from" />
+                    </td>
+                </tr>                
+                <tr>
+                    <td>Value:</td>
+                    <td>
+                        <input type="number" id="debit:value" />
+                    </td>
+                </tr>
+            </table>
+            <input type="button" value="debit" onclick="_front.debit()" />
+        </form>
+    </div>
+    <script src="timeline.js"></script>
+    <script src="database.js"></script>
+    <script src="modelo_novo.js"></script>
+    <script src="context.js"></script>
+    <script src="bank_app.js"></script>
+    <script src="bank_service.js"></script>
+    <script src="bank_front.js"></script>
+</body>
+
 </html>
