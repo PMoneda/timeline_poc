@@ -1,7 +1,8 @@
 var BankDB = new Database("BankAppDB");
 var current_scenario = "master";
-function Context(db, scenario){
+function Context(db, scenario, user){
     this._branch = scenario;
+    this._user = user;
     this._db = db;
     this.promises = [];
 }
@@ -13,7 +14,7 @@ Context.prototype.add = function(command){
 Context.prototype.execute = function(){
     var points = this._map_points();
     points.forEach((p)=>{
-        this._db.save(p,this._branch);
+        this._db.save(p,this._branch,this._user);
     });
 };
 Context.prototype._map_points = function(){
@@ -39,5 +40,6 @@ Context.prototype._map_points = function(){
 }
 
 function base_context(){
-    return new Context(BankDB,current_scenario);
+    var current_user = document.getElementById('logged:user').value;
+    return new Context(BankDB,current_scenario, current_user);
 }

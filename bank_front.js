@@ -40,6 +40,7 @@ BankFront.prototype.history = function(){
   commits.forEach((c)=>{
     var context = {};
     context.branch = c._branch;
+    context.author = c._author;
     context.action = c._data._command.type;
     context.action_version =  c._data._command._version_type;
     context.input = JSON.stringify(c._data._command.input);

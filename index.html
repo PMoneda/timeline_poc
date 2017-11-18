@@ -1,118 +1,152 @@
 <html>
+
 <head>
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
 </head>
+
 <body>
-    
-    
+
+
     <div id="app">
         <p>Welcome to Moneda eBank</p>
-        <form name="create_account">
-            <table>
-                <tr>
-                    <td>Owner:</td>
-                    <td>
-                        <input type="text" id="create_account:owner" />
+        <table style="width:100%">
+            <tr>
+                <td>User&nbsp;<input value="root" type="text" id="logged:user" /></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <form name="create_account">
+                        <table>
+                            <tr>
+                                <td>Owner:</td>
+                                <td>
+                                    <input type="text" id="create_account:owner" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Balance:</td>
+                                <td>
+                                    <input type="number" id="create_account:balance" />
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="button" value="create account" onclick="_front.create_account()" />
+                    </form>
+
+                </td>
+                <td>
+                    Accounts
+                    <br/>
+                    <textarea id="list" cols="50" rows="5"></textarea>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    Transfer
+                    <br/>
+                    <form name="transfer">
+                        <table>
+                            <tr>
+                                <td>From:</td>
+                                <td>
+                                    <input type="text" id="transfer:from" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>To:</td>
+                                <td>
+                                    <input type="text" id="transfer:to" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Value:</td>
+                                <td>
+                                    <input type="number" id="transfer:value" />
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="button" value="transfer" onclick="_front.transfer()" />
+                    </form>
+                </td>
+                <td>
+                    Credit
+                    <br/>
+                    <form name="credit">
+                        <table>
+                            <tr>
+                                <td>To:</td>
+                                <td>
+                                    <input type="text" id="credit:to" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Value:</td>
+                                <td>
+                                    <input type="number" id="credit:value" />
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="button" value="credit" onclick="_front.credit()" />
+                    </form>
+                </td>
+                <td>
+                        Debit
+                        <br/>
+                        <form name="debit">
+                            <table>
+                                <tr>
+                                    <td>From:</td>
+                                    <td>
+                                        <input type="text" id="debit:from" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Value:</td>
+                                    <td>
+                                        <input type="number" id="debit:value" />
+                                    </td>
+                                </tr>
+                            </table>
+                            <input type="button" value="debit" onclick="_front.debit()" />
+                        </form>
                     </td>
-                </tr>
-                <tr>
-                    <td>Balance:</td>
-                    <td>
-                        <input type="number" id="create_account:balance" />
-                    </td>
-                </tr>
-            </table>
-            <input type="button" value="create account" onclick="_front.create_account()" />
-        </form>
-        Accounts
-        <br/>
-        <textarea id="list" cols="50" rows="5"></textarea>
-        <br/>
-        <br/> Transfer
-        <br/>
-        <form name="transfer">
-            <table>
-                <tr>
-                    <td>From:</td>
-                    <td>
-                        <input type="text" id="transfer:from" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>To:</td>
-                    <td>
-                        <input type="text" id="transfer:to" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Value:</td>
-                    <td>
-                        <input type="number" id="transfer:value" />
-                    </td>
-                </tr>
-            </table>
-            <input type="button" value="transfer" onclick="_front.transfer()" />
-        </form>
-        <br/> Credit
-        <br/>
-        <form name="credit">
-            <table>
-                <tr>
-                    <td>To:</td>
-                    <td>
-                        <input type="text" id="credit:to" />
-                    </td>
-                </tr>                
-                <tr>
-                    <td>Value:</td>
-                    <td>
-                        <input type="number" id="credit:value" />
-                    </td>
-                </tr>
-            </table>
-            <input type="button" value="credit" onclick="_front.credit()" />
-        </form>
-        <br/> Debit
-        <br/>
-        <form name="debit">
-            <table>
-                <tr>
-                    <td>From:</td>
-                    <td>
-                        <input type="text" id="debit:from" />
-                    </td>
-                </tr>                
-                <tr>
-                    <td>Value:</td>
-                    <td>
-                        <input type="number" id="debit:value" />
-                    </td>
-                </tr>
-            </table>
-            <input type="button" value="debit" onclick="_front.debit()" />
-        </form>
-        <br/> History
-        <br/>
-        <form name="history">
-            <table>
-                <tr>
-                    <td>From:</td>
-                    <td>
-                        <input type="text" id="history:from" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                            <input type="button" value="history" onclick="_front.history()" />
-                    </td>
-                </tr>                                
-            </table>
-            <div id="visualization"></div>
-        </form>
+            </tr>
+            
+            <tr>
+                <td colspan="3">
+                        History
+                        <br/>
+                        <form name="history">
+                            <table>
+                                <tr>
+                                    <td>From:</td>
+                                    <td>
+                                        <input type="text" id="history:from" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="button" value="history" onclick="_front.history()" />
+                                    </td>
+                                </tr>
+                            </table>
+                            <div id="visualization"></div>
+                        </form>
+                </td>
+            </tr>
+        </table>
+
+
+
+
+
     </div>
 
 
-    
+
     <script src="repository.js"></script>
     <script src="database.js"></script>
     <script src="modelo_novo.js"></script>
@@ -122,15 +156,19 @@
     <script src="bank_front.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
-    
+
     <script>
-        
+
     </script>
     <script id="history-timeline-template" type="text/x-handlebars-template">
         <table style="font-size:9px">
                 <tr>
                     <td>branch</td>
                     <td>{{branch}}</td>
+                </tr>
+                <tr>
+                    <td>author</td>
+                    <td>{{author}}</td>
                 </tr>
                 <tr>
                     <td>action</td>
