@@ -27,8 +27,8 @@ Context.prototype._map_points = function(){
         }
         point._command = {};
         point._command.type = promise.constructor.name;
-        point._command._version_type = promise._version;
-        point._command.input = promise._input;
+        point._command.version_type = promise.version;
+        point._command.input = promise.input;
 
         point._document = {};
         point._document = promise.output();

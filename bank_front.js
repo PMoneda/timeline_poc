@@ -42,9 +42,12 @@ BankFront.prototype.history = function(){
     context.branch = c._branch;
     context.author = c._author;
     context.action = c._data._command.type;
-    context.action_version =  c._data._command._version_type;
+    context.action_version =  c._data._command.version_type;
     context.input = JSON.stringify(c._data._command.input);
     context.document_type = c._data._document._type;
+    if (exist(c._data._transaction)){
+      context.transaction = c._data._transaction;
+    }
     context.props = [];
     for(var prop in c._data._document){
       if (prop[0]!== "_"){
@@ -73,8 +76,8 @@ BankFront.prototype.refresh_list = function(){
 
 var _front = new BankFront();
 
-_service.create_account(10,"moneda");
-_service.create_account(20,"canellas");
-_service.create_account(50,"aline");
+_service.create_account(10,"client 1");
+_service.create_account(20,"client 2");
+_service.create_account(50,"client 3");
 
 _front.refresh_list();
