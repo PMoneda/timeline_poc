@@ -59,15 +59,15 @@ Repository.prototype.head = function(branch){
     return this.HEAD[branch];
 };
 
-Repository.prototype.setMainBranch = function(branch){
+Repository.prototype.checkout = function(branch){
     this.MAIN_BRANCH = branch; 
 };
 
-Repository.prototype.mainBranch = function(){
+Repository.prototype.main_branch = function(){
     return this.MAIN_BRANCH; 
 };
 
-Repository.prototype.getCommitsByBranch = function(branch){
+Repository.prototype.commits_by_branch = function(branch){
     var list = [];
     var base = this.BRANCHES[branch];    
     list.push(base)
@@ -80,7 +80,7 @@ Repository.prototype.getCommitsByBranch = function(branch){
     return clone(list);
 };
 
-Repository.prototype.getCommitByHash = function(hash){
+Repository.prototype.commit_by_hash = function(hash){
     return this.INDEX[hash];
 };
 Repository.prototype.override = function(hash, data, message, author){
@@ -102,8 +102,8 @@ Repository.prototype.commit = function(rawdata,message,author,branch){
         this.HEAD[branch] = commit;
     }else{
         var current = this.HEAD[branch];
-        current.setNext(commit);
-        commit.setPrev(current);
+        current.set_next(commit);
+        commit.set_prev(current);
         this.HEAD[branch] = commit;
         this.INDEX[current.hash()] = current;
     }
@@ -119,10 +119,10 @@ Repository.prototype.fork = function(hash, dest){
     var newBranch = castTo(CommitData,clone(target));
     newBranch._message = "fork "+newBranch._message;
     
-    newBranch.updateHash();
-    newBranch.setPrev(target);
-    newBranch.setBranch(dest);    
-    target.setNext(newBranch);
+    newBranch.update_hash();
+    newBranch.set_prev(target);
+    newBranch.set_branch(dest);    
+    target.set_next(newBranch);
     var ptr = newBranch.next(target.branch());
     newBranch.unlink()
     this.INDEX[newBranch.hash()] = newBranch;
@@ -133,10 +133,10 @@ Repository.prototype.fork = function(hash, dest){
         ptr = this.INDEX[ptr];
         var dup = castTo(CommitData,clone(ptr));
         dup._message = "fork "+dup._message;
-        dup.updateHash();
-        dup.setPrev(curr);
-        dup.setBranch(dest);
-        curr.setNext(dup)
+        dup.update_hash();
+        dup.set_prev(curr);
+        dup.set_branch(dest);
+        curr.set_next(dup)
         curr = dup
         ptr = dup.next(target.branch());
         dup.unlink()
@@ -190,12 +190,12 @@ function CommitData(data, message, author, branch){
     this._message = message;
     this._author = author;
     this._branch = branch;
-    this.updateHash();
+    this.update_hash();
 }
 
 
 
-CommitData.prototype.updateHash = function(){
+CommitData.prototype.update_hash = function(){
     if (typeof(this._timestamp) === "string" ){
         this._timestamp = new Date(this._timestamp);
     }
@@ -230,10 +230,10 @@ CommitData.prototype.branch = function(){
     return this._branch
 };
 
-CommitData.prototype.setBranch = function(branch){
+CommitData.prototype.set_branch = function(branch){
     this._branch = branch;
 };
-CommitData.prototype.setPrev = function(prevCommit){
+CommitData.prototype.set_prev = function(prevCommit){
     this._prev = prevCommit.hash();
 };
 
@@ -246,9 +246,70 @@ CommitData.prototype.unlink = function(branch){
     }
     
 };
-CommitData.prototype.setNext = function(nextCommit){
+CommitData.prototype.set_next = function(nextCommit){
     this._next[nextCommit.branch()] = nextCommit.hash();
 };
+
+
+
+//History e uma estrutura de dados igual ao Repository
+//mas a diferenca esta em quais acoes o History pode tomar
+//em relacao ao repositorio
+//o History é um repositório read-only
+function History(){
+    this.BRANCHES = {};
+    this.CLOSED_BRANCHES = {};
+    this.HEAD = {};
+    this.INDEX = {};
+    this._name = name;
+    this.MAIN_BRANCH = null;
+};
+
+History.prototype.checkout = function(branch){
+    this.MAIN_BRANCH = branch;
+}
+
+History.prototype.branches = function(){
+    var branches = [];
+    for(var branch in this.BRANCHES){
+        branches.push(branch);
+    }
+    return branches;
+}
+
+History.prototype.commits = function(){
+    var commits = [];
+    for(var hash in this.INDEX){
+        commits.push(clone(this.INDEX[hash]));
+    }
+    commits.sort(function(c1, c2){return c1._timestamp-c2._timestamp});
+    return commits;
+}
+
+History.prototype.closed_branches = function(){
+    var branches = [];
+    for(var branch in this.CLOSED_BRANCHES){
+        branches.push(branch);
+    }
+    return branches;
+}
+
+History.prototype.commits_by_branch = function(branch){
+    var list = [];
+    var base = this.BRANCHES[branch];    
+    list.push(base)
+    base = base.next(branch);
+    while(base != null){
+        var d = this.INDEX[base];
+        list.push(d);
+        base = d.next(branch);
+    }
+    return clone(list);
+};
+
+
+
+
 
 /*
 //Using

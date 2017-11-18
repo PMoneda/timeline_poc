@@ -12,23 +12,29 @@ BankService.prototype.create_account = function(balance,owner){
 
 BankService.prototype.transfer = function(from_id,to_id, value){
     var ctx = base_context();
-    var from = castTo(Account,ctx._db.getById("Account",from_id));
-    var to = castTo(Account,ctx._db.getById("Account",to_id));
+    var from = castTo(Account,ctx._db.get_by_id("Account",from_id));
+    var to = castTo(Account,ctx._db.get_by_id("Account",to_id));
     TransferTransaction(ctx,from,to,value);   
 }
 
 BankService.prototype.credit = function(to_id, value){
     var ctx = base_context();
-    var to = castTo(Account,ctx._db.getById("Account",to_id));
+    var to = castTo(Account,ctx._db.get_by_id("Account",to_id));
     ctx.add(new CreditAccountCommand(to,value));
     ctx.execute();    
 }
 
 BankService.prototype.debit = function(from_id, value){
     var ctx = base_context();
-    var from = castTo(Account,ctx._db.getById("Account",from_id));
+    var from = castTo(Account,ctx._db.get_by_id("Account",from_id));
     ctx.add(new DebitAccountCommand(from,value));
     ctx.execute();    
+}
+
+BankService.prototype.history = function(from_id){
+    var ctx = base_context();
+    var history = ctx._db.history("Account",from_id);
+    return history;
 }
 
 BankService.prototype.find_all = function(){

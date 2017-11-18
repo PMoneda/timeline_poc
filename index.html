@@ -1,5 +1,7 @@
 <html>
-
+<head>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+</head>
 <body>
     
     
@@ -22,7 +24,7 @@
             </table>
             <input type="button" value="create account" onclick="_front.create_account()" />
         </form>
-        Registros
+        Accounts
         <br/>
         <textarea id="list" cols="50" rows="5"></textarea>
         <br/>
@@ -89,14 +91,71 @@
             </table>
             <input type="button" value="debit" onclick="_front.debit()" />
         </form>
+        <br/> History
+        <br/>
+        <form name="history">
+            <table>
+                <tr>
+                    <td>From:</td>
+                    <td>
+                        <input type="text" id="history:from" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                            <input type="button" value="history" onclick="_front.history()" />
+                    </td>
+                </tr>                                
+            </table>
+            <div id="visualization"></div>
+        </form>
     </div>
-    <script src="timeline.js"></script>
+
+
+    
+    <script src="repository.js"></script>
     <script src="database.js"></script>
     <script src="modelo_novo.js"></script>
     <script src="context.js"></script>
     <script src="bank_app.js"></script>
     <script src="bank_service.js"></script>
     <script src="bank_front.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+    
+    <script>
+        
+    </script>
+    <script id="history-timeline-template" type="text/x-handlebars-template">
+        <table style="font-size:9px">
+                <tr>
+                    <td>branch</td>
+                    <td>{{branch}}</td>
+                </tr>
+                <tr>
+                    <td>action</td>
+                    <td>{{action}}</td>
+                </tr>
+                <tr>
+                    <td>version</td>
+                    <td>{{action_version}}</td>
+                </tr>
+                <tr>
+                    <td>input</td>
+                    <td>{{input}}</td>
+                </tr>
+                <tr>
+                    <td>document</td>
+                    <td>{{document_type}}</td>
+                </tr>
+                {{#each props}}
+                    <tr>
+                        <td>{{prop_name}}</td>
+                        <td>{{prop_value}}</td>
+                    </tr>
+                {{/each}}                
+            </table>        
+      </script>
 </body>
 
 </html>

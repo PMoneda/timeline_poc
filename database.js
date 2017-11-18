@@ -7,8 +7,14 @@ function Database(name){
         transactions:{}
     };
 }
-Database.prototype.save = function(entity, branch){
+Database.prototype.save = function(entity, branch, author, message){
     var repo = null;
+    if (notExist(author)){
+        author = "database-service";
+    }
+    if (notExist(message)){
+        message = "save"
+    }
     if (notExist(this.INDEX[entity._document._type])){
         this.INDEX[entity._document._type] = {};
     }
@@ -19,12 +25,12 @@ Database.prototype.save = function(entity, branch){
         repo = this.INDEX[entity._document._type][entity._document.id];
     }
     if (exist(branch)){
-        repo.setMainBranch(branch);
+        repo.checkout(branch);
         entity._document._branch = branch;
     }else if(notExist(entity._document._branch)){
-        entity._document._branch = repo.mainBranch();
+        entity._document._branch = repo.main_branch();
     }else if (exist(entity._document._branch)){
-        repo.setMainBranch(entity._document._branch);
+        repo.checkout(entity._document._branch);
     }
     var head = repo.head();
     if (notExist(head)){
@@ -32,7 +38,7 @@ Database.prototype.save = function(entity, branch){
     }else {
         entity._document._version = head.data()._document._version + 1;
     }
-    var hash = repo.commit(entity,"save","database-service",entity._document._branch);
+    var hash = repo.commit(entity,message,author,entity._document._branch);
     if(exist(entity._transaction)){
         if (notExist(this.SEARCH["transactions"][entity._transaction.id])){
             this.SEARCH["transactions"][entity._transaction.id] = [];
@@ -58,14 +64,14 @@ Database.prototype.find_all = function(type){
 
 };
 
-Database.prototype.commitsByTransactionId = function(id){
+Database.prototype.commits_by_transaction_id = function(id){
     var result = [];
     if(exist(this.SEARCH["transactions"][id])){
         var list = this.SEARCH["transactions"][id];
         for(var i in list){
             var entities = this.INDEX[list[i].type];
             for(var j in entities){
-                var c = entities[j].getCommitByHash(list[i].hash);
+                var c = entities[j].commit_by_hash(list[i].hash);
                 if(exist(c)){
                     result.push(c);
                 }                
@@ -77,7 +83,7 @@ Database.prototype.commitsByTransactionId = function(id){
 
 
 Database.prototype.fork = function(type,id,version,origin,branch){
-    var commits = this.INDEX[type][id].getCommitsByBranch(origin);
+    var commits = this.INDEX[type][id].commits_by_branch(origin);
     var commit = null;
     for (var i in commits){
         commit = commits[i];
@@ -90,14 +96,14 @@ Database.prototype.fork = function(type,id,version,origin,branch){
        //então deve-se replicar o fork em todas as entidades atingidas pela
        //transacao
        var hash = this.INDEX[type][id].fork(commit._hash,branch);
-       var newCommits = this.INDEX[type][id].getCommitsByBranch(branch);
+       var newCommits = this.INDEX[type][id].commits_by_branch(branch);
        for (var i in newCommits){
             commit = clone(newCommits[i]);
             commit._data._branch = branch;
             this.INDEX[type][id].override(commit._hash,commit._data,commit._message,commit._author);
         }
-       this.INDEX[type][id].setMainBranch(branch);
-       return this.INDEX[type][id].getCommitByHash(hash).data();
+       this.INDEX[type][id].checkout(branch);
+       return this.INDEX[type][id].commit_by_hash(hash).data();
     }
 };
 
@@ -106,14 +112,14 @@ Database.prototype.sync = function(){
     fs.writeFileSync(this._name, JSON.stringify(this));
 };
 
-Database.prototype.getById = function(type,id){
+Database.prototype.get_by_id = function(type,id){
     if(exist(this.INDEX[type]) && exist(this.INDEX[type][id])){
         return this.INDEX[type][id].head().data()._document;
     }
 };
 
-Database.prototype.history = function(type, id, branch){
-    return this.INDEX[type][id].getCommitsByBranch(branch).map((c) => c._data);
+Database.prototype.history = function(type, id){
+    return castTo(History,clone(this.INDEX[type][id]));
 }
 
 function loadDabase (name){
@@ -157,7 +163,7 @@ setTimeout(()=>{
                         db.save(account,"master");
                        
                         print(account.balance);
-                        print(db.getById("account",1));    
+                        print(db.get_by_id("account",1));    
                     },100)
                 },100)    
             },100)    

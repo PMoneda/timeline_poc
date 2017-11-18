@@ -29,6 +29,40 @@ BankFront.prototype.debit = function(){
   this.refresh_list();
 };
 
+BankFront.prototype.history = function(){    
+  var from = document.getElementById("history:from").value;  
+  var history = _service.history(from);
+  var commits = history.commits();
+  var source   = document.getElementById("history-timeline-template").innerHTML;
+  var template = Handlebars.compile(source);
+  var dataset = [];
+  var i = 1;
+  commits.forEach((c)=>{
+    var context = {};
+    context.branch = c._branch;
+    context.action = c._data._command.type;
+    context.action_version =  c._data._command._version_type;
+    context.input = JSON.stringify(c._data._command.input);
+    context.document_type = c._data._document._type;
+    context.props = [];
+    for(var prop in c._data._document){
+      if (prop[0]!== "_"){
+        context.props.push({prop_name:prop,prop_value:c._data._document[prop]})
+      }
+    }
+    var item = {id: i, content: template(context), start: new Date(c._timestamp)};
+    dataset.push(item);
+    i++;
+  });
+
+  var container = document.getElementById('visualization');  
+  container.innerHTML = "";
+  var items = new vis.DataSet(dataset);
+  var options = {};
+  // Create a Timeline
+  var timeline = new vis.Timeline(container, items, options);
+};
+
 BankFront.prototype.refresh_list = function(){  
   var list = document.getElementById("list");
   list.value = "";
