@@ -61,9 +61,9 @@ function TransferTransaction(context, account_from, account_to, value){
 //Registra os servicos de comandos e transacoes no Lookup
 var _lookup = new Lookup();
 
-_lookup.register("CreateAccount",1,CreateAccountCommand);
-_lookup.register("CreditAccount",1,CreditAccountCommand);
-_lookup.register("DebitAccount",1,DebitAccountCommand);
+_lookup.register("CreateAccountCommand",1,CreateAccountCommand);
+_lookup.register("CreditAccountCommand",1,CreditAccountCommand);
+_lookup.register("DebitAccountCommand",1,DebitAccountCommand);
 _lookup.register("TransferTransaction",1,TransferTransaction);
 
 

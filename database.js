@@ -24,6 +24,32 @@ Database.prototype.save = function(entity, branch, author, message){
     }else{
         repo = this.INDEX[entity._document._type][entity._document.id];
     }
+    var branches = repo.current_branches();
+    if (branches.find((s)=>s === branch) === undefined){
+        branches.push(branch);
+    }
+    branches.forEach((b)=>{
+        this.save_entity(entity,b,author,message);
+    });
+    
+};
+Database.prototype.save_entity = function(entity, branch, author, message){
+    var repo = null;
+    if (notExist(author)){
+        author = "database-service";
+    }
+    if (notExist(message)){
+        message = "save"
+    }
+    if (notExist(this.INDEX[entity._document._type])){
+        this.INDEX[entity._document._type] = {};
+    }
+    if (notExist(this.INDEX[entity._document._type][entity._document.id])){
+        repo = new Repository(entity._document._type+"-"+entity._document.id)
+        this.INDEX[entity._document._type][entity._document.id] = repo;
+    }else{
+        repo = this.INDEX[entity._document._type][entity._document.id];
+    }
     if (exist(branch)){
         repo.checkout(branch);
         entity._document._branch = branch;
@@ -87,7 +113,7 @@ Database.prototype.fork = function(type,id,version,origin,branch){
     var commit = null;
     for (var i in commits){
         commit = commits[i];
-        if (commit._data._version === version){
+        if (commit._data._document._version === version){
             break;
         }
     }
@@ -106,7 +132,6 @@ Database.prototype.fork = function(type,id,version,origin,branch){
        return this.INDEX[type][id].commit_by_hash(hash).data();
     }
 };
-
 
 Database.prototype.sync = function(){
     fs.writeFileSync(this._name, JSON.stringify(this));

@@ -165,6 +165,15 @@ Repository.prototype.string = function(){
 Repository.prototype.save = function(){
    // fs.writeFileSync(this._name, JSON.stringify(this));
 };
+Repository.prototype.current_branches = function(){
+    var branches = [];
+    for(var branch in this.BRANCHES){
+        if(notExist(this.CLOSED_BRANCHES[branch])){
+            branches.push(branch);
+        }        
+    }
+    return branches;
+}
 
 
 

@@ -22,6 +22,20 @@ BankFront.prototype.credit = function(){
   this.refresh_list();
 };
 
+BankFront.prototype.reproduce = function(){    
+  var key = document.getElementById("reproduce:from").value;
+  var branch = document.getElementById("reproduce:requirement").value;  
+  _service.reproduce(JSON.parse(key),branch);
+  this.refresh_list();
+};
+
+BankFront.prototype.reprocess = function(){    
+  var key = document.getElementById("reprocess:from").value; 
+  var branch = document.getElementById("reprocess:requirement").value;  
+  _service.reprocess(JSON.parse(key),branch);
+  this.refresh_list();
+};
+
 BankFront.prototype.debit = function(){    
   var from = document.getElementById("debit:from").value;
   var value = parseInt(document.getElementById("debit:value").value);
@@ -38,6 +52,7 @@ BankFront.prototype.history = function(){
   var dataset = [];
   var i = 1;
   commits.forEach((c)=>{
+    c = castTo(CommitData,c);
     var context = {};
     context.branch = c._branch;
     context.author = c._author;
@@ -54,7 +69,12 @@ BankFront.prototype.history = function(){
         context.props.push({prop_name:prop,prop_value:c._data._document[prop]})
       }
     }
-    var item = {id: i, content: template(context), start: new Date(c._timestamp)};
+    var key = {};
+    key.type = c._data._document._type;
+    key.id = c._data._document.id;
+    key.version = c._data._document._version;
+    key.branch = c._branch;
+    var item = {id: JSON.stringify(key), content: template(context), start: new Date(c._timestamp)};
     dataset.push(item);
     i++;
   });
@@ -65,6 +85,10 @@ BankFront.prototype.history = function(){
   var options = {};
   // Create a Timeline
   var timeline = new vis.Timeline(container, items, options);
+  timeline.on("doubleClick",(props)=>{    
+    document.getElementById("reproduce:from").value = props.item;
+    document.getElementById("reprocess:from").value = props.item;
+  });
 };
 
 BankFront.prototype.refresh_list = function(){  
@@ -76,8 +100,7 @@ BankFront.prototype.refresh_list = function(){
 
 var _front = new BankFront();
 
-_service.create_account(10,"client 1");
-_service.create_account(20,"client 2");
-_service.create_account(50,"client 3");
+_service.create_account(0,"moneda");
+_service.create_account(1000,"netflix");
 
 _front.refresh_list();
