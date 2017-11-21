@@ -25,8 +25,8 @@ BankFront.prototype.credit = function(){
 BankFront.prototype.reproduce = function(){    
   var key = document.getElementById("reproduce:from").value;
   var branch = document.getElementById("reproduce:requirement").value;  
-  _service.reproduce(JSON.parse(key),branch);
-  this.refresh_list();
+  var steps = _service.reproduce(JSON.parse(key),branch);
+  print(steps);
 };
 
 BankFront.prototype.reprocess = function(){    
@@ -95,7 +95,7 @@ BankFront.prototype.refresh_list = function(){
   var list = document.getElementById("list");
   list.value = "";
   var accounts = _service.find_all();
-  accounts.map((ac)=> ac.id + " " + ac.owner + " " + ac.balance + "\n").forEach((s)=> list.value += s);
+  accounts.map((ac)=>ac._branch + " " + ac.id + " " + ac.owner + " " + ac.balance + "\n").forEach((s)=> list.value += s);
 };
 
 var _front = new BankFront();

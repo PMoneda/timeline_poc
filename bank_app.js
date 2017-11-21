@@ -21,7 +21,7 @@ CreateAccountCommand.prototype.output = function(){
 function CreditAccountCommand(account, value){
     this.version = 1;
     this.account = account;
-    this.input = value;
+    this.input = [value];
     this.account.balance += value;
 }
 
@@ -36,7 +36,7 @@ function DebitAccountCommand(account, value){
         throw "insufficient funds";
 
     }
-    this.input = value;
+    this.input = [value];
     this.account.balance -= value;
 }
 

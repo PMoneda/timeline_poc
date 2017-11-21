@@ -138,13 +138,13 @@ Database.prototype.sync = function(){
 };
 
 Database.prototype.get_by_id = function(type,id){
-    if(exist(this.INDEX[type]) && exist(this.INDEX[type][id])){
+    if(exist(this.INDEX[type]) && exist(this.INDEX[type][id])){        
         return this.INDEX[type][id].head().data()._document;
     }
 };
 
 Database.prototype.history = function(type, id){
-    return castTo(History,clone(this.INDEX[type][id]));
+    return castDataHistory(clone(this.INDEX[type][id]));
 }
 
 function loadDabase (name){

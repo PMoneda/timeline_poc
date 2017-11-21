@@ -190,6 +190,14 @@ function castRepository(obj){
     return r;
 }
 
+function castDataHistory(obj){
+    var r = castTo(DataHistory,obj);
+    convertAll(CommitData,r.INDEX)
+    convertAll(CommitData,r.HEAD)
+    convertAll(CommitData,r.BRANCHES)
+    return r;
+}
+
 
 function CommitData(data, message, author, branch){
     this._prev = null;
@@ -224,6 +232,9 @@ CommitData.prototype.data = function(){
 };
 
 CommitData.prototype.next = function(branch){
+    if (notExist(branch)){
+        branch = this._branch;
+    }
     return this._next[branch];
 };
 
@@ -261,11 +272,11 @@ CommitData.prototype.set_next = function(nextCommit){
 
 
 
-//History e uma estrutura de dados igual ao Repository
-//mas a diferenca esta em quais acoes o History pode tomar
+//DataHistory e uma estrutura de dados igual ao Repository
+//mas a diferenca esta em quais acoes o DataHistory pode tomar
 //em relacao ao repositorio
-//o History é um repositório read-only
-function History(){
+//o DataHistory é um repositório read-only
+function DataHistory(){
     this.BRANCHES = {};
     this.CLOSED_BRANCHES = {};
     this.HEAD = {};
@@ -274,11 +285,11 @@ function History(){
     this.MAIN_BRANCH = null;
 };
 
-History.prototype.checkout = function(branch){
+DataHistory.prototype.checkout = function(branch){
     this.MAIN_BRANCH = branch;
 }
 
-History.prototype.branches = function(){
+DataHistory.prototype.branches = function(){
     var branches = [];
     for(var branch in this.BRANCHES){
         branches.push(branch);
@@ -286,7 +297,7 @@ History.prototype.branches = function(){
     return branches;
 }
 
-History.prototype.commits = function(){
+DataHistory.prototype.commits = function(){
     var commits = [];
     for(var hash in this.INDEX){
         commits.push(clone(this.INDEX[hash]));
@@ -295,7 +306,7 @@ History.prototype.commits = function(){
     return commits;
 }
 
-History.prototype.closed_branches = function(){
+DataHistory.prototype.closed_branches = function(){
     var branches = [];
     for(var branch in this.CLOSED_BRANCHES){
         branches.push(branch);
@@ -303,7 +314,7 @@ History.prototype.closed_branches = function(){
     return branches;
 }
 
-History.prototype.commits_by_branch = function(branch){
+DataHistory.prototype.commits_by_branch = function(branch){
     var list = [];
     var base = this.BRANCHES[branch];    
     list.push(base)
@@ -313,7 +324,11 @@ History.prototype.commits_by_branch = function(branch){
         list.push(d);
         base = d.next(branch);
     }
-    return clone(list);
+    list.sort(function(c1, c2){return c1._timestamp-c2._timestamp});
+    return list;
+};
+DataHistory.prototype.commit_by_hash = function(hash){
+    return this.INDEX[hash];
 };
 
 
