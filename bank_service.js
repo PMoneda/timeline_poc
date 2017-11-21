@@ -69,8 +69,10 @@ BankService.prototype.reproduce = function(key, branch){
 }
 
 BankService.prototype.reprocess = function(key, branch){
+    print("a");
     var ctx = base_context();    
-    ctx.fork(key.type,key.id,key.version, branch);
+    var a = ctx.fork(key.type,key.id,key.version, branch);
+    print(a);
 }
 
 BankService.prototype.history = function(from_id){

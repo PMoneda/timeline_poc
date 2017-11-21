@@ -123,11 +123,12 @@ Database.prototype.fork = function(type,id,version,origin,branch){
        //transacao
        var hash = this.INDEX[type][id].fork(commit._hash,branch);
        var newCommits = this.INDEX[type][id].commits_by_branch(branch);
-       for (var i in newCommits){
-            commit = clone(newCommits[i]);
-            commit._data._branch = branch;
-            this.INDEX[type][id].override(commit._hash,commit._data,commit._message,commit._author);
-        }
+       newCommits.forEach((c)=>{
+        commit = clone(c);
+        commit._data._branch = branch;
+        this.INDEX[type][id].override(commit._hash,commit._data,commit._message,commit._author);
+       });
+                
        this.INDEX[type][id].checkout(branch);
        return this.INDEX[type][id].commit_by_hash(hash).data();
     }
